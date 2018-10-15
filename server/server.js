@@ -12,8 +12,19 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 //Register a particular event listener. Below we will use a built in event - connection
+
 io.on('connection', (socket) => {
   console.log('New user connected');
+
+  socket.emit('newMessage', {
+    from: 'Nithin Shetty',
+    text: 'Hey bro, all the very best',
+    createdAt: Date.now()
+  });
+
+  socket.on('createMessage', (message) => {
+    console.log('createmessage', message);
+  });
 
   socket.on('disconnect', ()=> {
     console.log('Client has disconnected');
@@ -37,3 +48,6 @@ server.listen(port, () => {
 
 //Notes
 //socket.on listens to an event. Could be built in or custom event
+//http is a unidirectional protocol - Always the client sends a request to the server
+//websockets allow bidirectional communication
+//Emitting and listening to custom events is where socket.io gets interesting
