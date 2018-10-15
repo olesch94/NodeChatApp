@@ -16,14 +16,13 @@ var io = socketIO(server);
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  socket.emit('newMessage', {
-    from: 'Nithin Shetty',
-    text: 'Hey bro, all the very best',
-    createdAt: Date.now()
-  });
-
   socket.on('createMessage', (message) => {
     console.log('createmessage', message);
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', ()=> {
@@ -48,6 +47,8 @@ server.listen(port, () => {
 
 //Notes
 //socket.on listens to an event. Could be built in or custom event
+//socket.emit emits an event to a single connection
+//io.emit emits an event to all the connections.
 //http is a unidirectional protocol - Always the client sends a request to the server
 //websockets allow bidirectional communication
 //Emitting and listening to custom events is where socket.io gets interesting

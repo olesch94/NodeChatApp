@@ -3,11 +3,6 @@ var socket = io();
 
 socket.on('connect', function () {
   console.log('Connected to server');     //This can be seen in the console tab of developer tools in Chrome
-
-    socket.emit('createMessage', {
-        from:'Olesch',
-        text:'hey guys, Olesch here!'
-    });
 });
 
 socket.on('disconnect', function () {
