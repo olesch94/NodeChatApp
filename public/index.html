@@ -8,6 +8,20 @@
 
 <body>
   <p>Welcome to the chat app - Your host Olesch</p>
+  
+  <script src="/socket.io/socket.io.js"></script>       <!--Gives us access to the socket io library-->
+  
+  <script>
+    var socket = io();          //This creates a web socket connection
+    socket.on('connect', () => {
+      console.log('Connected to server');     //This can be seen in the console tab of developer tools in Chrome
+    });
+
+    socket.on('disconnect', () =>{
+      console.log('Disconnected from server');
+    });
+  </script>
+
 </body>
 
 </html>
