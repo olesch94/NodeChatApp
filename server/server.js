@@ -22,11 +22,13 @@ io.on('connection', (socket) => {
   //Send to everybody but this socket
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined'));
 
-  socket.on('createMessage', (message) => {
+  //For sending an acknowledgement back to the client from the server which is listening, add a 2nd argument in the callback function
+  socket.on('createMessage', (message, callback) => {
     console.log('createmessage', message);
    
     //Send to everybody
     io.emit('newMessage', generateMessage(message.from, message.text));
+    callback('This is from the server');
   });
 
   socket.on('disconnect', ()=> {

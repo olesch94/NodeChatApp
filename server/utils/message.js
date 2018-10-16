@@ -6,4 +6,4 @@ var generateMessage = (from, text) =>{
     };
 };
 
-module.exports.generateMessage = generateMessage;
+module.exports.generateMessage = generateMessage; 
