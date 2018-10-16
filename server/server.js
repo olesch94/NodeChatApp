@@ -6,6 +6,7 @@ const socketIO = require('socket.io');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
+const {generateMessage} = require('./utils/message');
 
 //Create a server using http library and give it to socket IO. This will let us accept any connections from the incoming client.
 var server = http.createServer(app);
@@ -16,34 +17,16 @@ var io = socketIO(server);
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Hi there, Welcome to the chatroom',
-    createdAt: new Date().getTime()
-  });
+  socket.emit('newMessage', generateMessage('Admin', 'Hi there, Welcome to the chatroom'));
 
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'New user has joined',
-    createdAt: new Date().getTime()
-  })
+  //Send to everybody but this socket
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined'));
 
   socket.on('createMessage', (message) => {
     console.log('createmessage', message);
    
     //Send to everybody
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
-
-    //Send to everybody but this socket
-    // socket.broadcast.emit('newMessage', {
-    //   from: message.from,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // });
+    io.emit('newMessage', generateMessage(message.from, message.text));
   });
 
   socket.on('disconnect', ()=> {
