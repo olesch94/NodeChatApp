@@ -6,7 +6,7 @@ const socketIO = require('socket.io');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 //Create a server using http library and give it to socket IO. This will let us accept any connections from the incoming client.
 var server = http.createServer(app);
@@ -16,7 +16,6 @@ var io = socketIO(server);
 
 io.on('connection', (socket) => {
   console.log('New user connected');
-
   socket.emit('newMessage', generateMessage('Admin', 'Hi there, Welcome to the chatroom'));
 
   //Send to everybody but this socket
@@ -28,7 +27,11 @@ io.on('connection', (socket) => {
    
     //Send to everybody
     io.emit('newMessage', generateMessage(message.from, message.text));
-    callback('This is from the server');
+    callback();
+  });
+
+  socket.on('createLocationMessage', (coords) =>{
+    io.emit('newLocationMessage', generateLocationMessage('Admin: ', coords.latitude, coords.longitude));
   });
 
   socket.on('disconnect', ()=> {
@@ -45,7 +48,7 @@ server.listen(port, () => {
 
 
 
-
+//698ea5
 
 
 
