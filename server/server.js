@@ -39,16 +39,21 @@ io.on('connection', (socket) => {
 
   //For sending an acknowledgement back to the client from the server which is listening, add a 2nd argument to the callback function
   socket.on('createMessage', (message, callback) => {
-    console.log('createmessage', message);
-   
-    //Send to everybody
-    io.emit('newMessage', generateMessage(message.from, message.text));   
+    var user = users.getUser(socket.id);
+    if(user && isRealString(message.text)){
+      //Send to everyone in the room
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
+      
     //io.to('renee').emit('newMessage', generateMessage(message.from, message.text));    --
     callback();
   });
 
   socket.on('createLocationMessage', (coords) =>{
-    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+    var user = users.getUser(socket.id);
+    if(user){
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+    }    
   });
 
   socket.on('disconnect', ()=> {

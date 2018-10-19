@@ -76,8 +76,8 @@ socket.on('updateUserList', function(users){
 jQuery('#message-form').on('submit', function(e){
     e.preventDefault();         //Prevent form reload
     var messageTextbox = jQuery('[name=message]');
+
     socket.emit('createMessage', {
-        from: 'User',
         text: messageTextbox.val()
     }, function(){
         //Clear the textbox once we receive the acknowledgement from the server
